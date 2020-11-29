@@ -88,7 +88,7 @@ def main(argument: Argument):
             target_directory = "release" if argument.release else "debug"
             elf_path = "target/avr-atmega328p/" + \
                       f"{target_directory}/{package_name}.elf"
-        Logger.error("Building succeeded! Writing to Arduino...")
+        Logger.success("Building succeeded! Writing to Arduino...")
 
     avrdude_result = run_avrdude(
         argument.target,
@@ -100,15 +100,14 @@ def main(argument: Argument):
         Logger.error("Writing failed!")
         return
 
-    Logger.error("All works done!")
+    Logger.success("All works done!")
 
 
 def entry():
     try:
         argument = Argument()
     except ArgumentError as e:
-        message = e.reason
-        print(f"[!] {message}")
+        Logger.error(e.reason)
     else:
         main(argument)
 
