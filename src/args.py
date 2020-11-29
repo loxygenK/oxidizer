@@ -13,10 +13,6 @@ class Argument:
 
     def __setup_parser(self):
         self.parser.add_argument(
-            'subcommand', help='Specify what to do.',
-            choices=["build", "help"]
-        )
-        self.parser.add_argument(
             '--cargo-option', '-c', metavar="Option",
             help="Pass options to cargo. Type without '-'!", nargs="*",
             dest="cargo_option"
@@ -53,7 +49,6 @@ class Argument:
                 "--cargo-override",
                 "--cargo-override is selected, but no options were given!"
             )
-        self.subcommand: str = arguments.subcommand
         self.cargo_option: List[str] = arguments.cargo_option
         self.cargo_override: bool = arguments.cargo_override
         self.avrdude_option: List[str] = arguments.avrdude_option
