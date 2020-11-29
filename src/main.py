@@ -108,8 +108,12 @@ def entry():
         argument = Argument()
     except ArgumentError as e:
         Logger.error(e.reason)
-    else:
-        main(argument)
+        return
+
+    if argument.no_color:
+        Logger.disable_color()
+
+    main(argument)
 
 
 if __name__ == "__main__":
