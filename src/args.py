@@ -35,12 +35,30 @@ class Argument:
             help="Use -q option when avrdude.", action="store_true",
             dest="avrdude_quite"
         )
+        self.parser.add_argument(
+            '--skip-cargo', '-s',
+            help="Skip building using cargo.", action="store_true",
+            dest="skip_cargo"
+        )
+        self.parser.add_argument(
+            '--elf-path', '-e',
+            help="Specify ELF file's path. Use "
+                 "target/avr-atmega328p/{debug,release}/{package_name}.elf "
+                 "as default.",
+            dest="elf_path"
+        )
 
     def __setup_fields(self, arguments):
         if arguments.avrdude_override and arguments.avrdude_option is None:
             raise ArgumentError(
                 "--avrdude-override",
                 "--avrdude-override is selected, but no options were given!"
+            )
+        if arguments.elf_path is None and arguments.skip_cargo:
+            raise ArgumentError(
+                "--skip_cargo",
+                "You should specify elf_path using '--elf_path' when "
+                "skipping cargo."
             )
         self.target: str = arguments.target
         self.cargo_option: List[str] = list(
@@ -51,6 +69,8 @@ class Argument:
         ) if arguments.avrdude_option is not None else []
         self.avrdude_override: bool = arguments.avrdude_override
         self.avrdude_quite: bool = arguments.avrdude_quite
+        self.skip_cargo: bool = arguments.skip_cargo
+        self.elf_path: str = arguments.elf_path
 
 
 class ArgumentError(Exception):
