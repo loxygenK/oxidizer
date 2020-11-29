@@ -2,6 +2,7 @@
 import toml
 import os
 import subprocess as sp
+from args import Argument, ArgumentError
 
 from typing import Optional, List
 
@@ -68,5 +69,10 @@ def main():
     
 
 if __name__ == "__main__":
+    try:
+        argument = Argument()
+    except ArgumentError as e:
+        message = e.reason
+        print(f"[!] {message}")
     # main()
 
