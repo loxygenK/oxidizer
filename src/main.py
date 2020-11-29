@@ -41,7 +41,11 @@ def fetch_package_name() -> Optional[str]:
 def run_command(args: List[str]):
     command_string = " ".join(args)
     Logger.info(f">> {command_string}")
-    return sp.call(args)
+    try:
+        return sp.call(args)
+    except FileNotFoundError:
+        Logger.error(f"{args[0]} not found!! Do you have {args[0]} in your path?")
+        return -1
 
 
 def run_cargo(package_name: str, cargo_option: List[str], release: bool):
