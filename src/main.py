@@ -86,8 +86,8 @@ def main(argument: Argument):
             target_directory = "release" if argument.release else "debug"
             elf_path = "target/avr-atmega328p/" + \
                       f"{target_directory}/{package_name}.elf"
+        print("[i] Building succeeded! Writing to Arduino...")
 
-    print("[i] Building succeeded! Writing to Arduino...")
     avrdude_result = run_avrdude(
         argument.target,
         elf_path,
@@ -96,6 +96,7 @@ def main(argument: Argument):
     )
     if avrdude_result != 0:
         print("[!] Writing failed!")
+        return
 
     print("[✓] All works done!")
 
