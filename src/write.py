@@ -81,5 +81,6 @@ if __name__ == "__main__":
     except ArgumentError as e:
         message = e.reason
         print(f"[!] {message}")
-    main(argument)
+    else:
+        main(argument)
 
