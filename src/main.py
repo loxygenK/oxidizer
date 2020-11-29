@@ -68,14 +68,18 @@ def run_avrdude(
 
 
 def main(argument: Argument):
-    package_name = fetch_package_name()
-    cargo_result = run_cargo(package_name, argument.cargo_option)
-    if cargo_result != 0:
-        print("[!] Building failed! Exiting.")
-        return
+    elf_path = argument.elf_path
+    if not argument.skip_cargo:
+        package_name = fetch_package_name()
+        cargo_result = run_cargo(package_name, argument.cargo_option)
+        if cargo_result != 0:
+            print("[!] Building failed! Exiting.")
+            return
+        
+        if elf_path is None:
+            elf_path = f"target/avr-atmega328p/debug/{package_name}.elf"
 
     print("[i] Building succeeded! Writing to Arduino...")
-    elf_path = f"target/avr-atmega328p/debug/{package_name}.elf"
     avrdude_result = run_avrdude(
         argument.target,
         elf_path,
