@@ -15,6 +15,7 @@ version = "0.1.0"
 setup(
     name="arduino-oxidizer",
     version=version,
+    url="https://github.com/loxygenK/oxidizer",
     author="loxygen",
     author_email="me@loxygen.dev",
     maintainer="loxygen",
