@@ -40,6 +40,12 @@ def run_command(args: List[str]):
 
 
 def main(argument: Argument):
+    # TODO: Does this work in Windows? (Test required)
+    if not os.path.exists(argument.target):
+        print(f"[!] {argument.target} does not exist!")
+        print("    Make sure you specified the correct device path.")
+        return
+
     package_name = fetch_package_name()
     if package_name is None:
         return
