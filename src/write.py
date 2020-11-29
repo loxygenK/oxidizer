@@ -39,7 +39,7 @@ def run_command(args: List[str]):
     return sp.call(args)
 
 
-def main():
+def main(argument: Argument):
     package_name = fetch_package_name()
     if package_name is None:
         return
@@ -74,5 +74,5 @@ if __name__ == "__main__":
     except ArgumentError as e:
         message = e.reason
         print(f"[!] {message}")
-    # main()
+    main(argument)
 
