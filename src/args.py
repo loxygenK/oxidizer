@@ -40,6 +40,13 @@ class Argument:
             help="Skip building using cargo.",
             dest="skip_cargo"
         )
+        self.parser.add_argument(
+            '--elf-path', '-e',
+            help="Specify ELF file's path. Use "
+                 "target/avr-atmega328p/{debug,release}/{package_name}.elf"
+                 "as default.",
+            dest="elf_path"
+        )
 
     def __setup_fields(self, arguments):
         if arguments.avrdude_override and arguments.avrdude_option is None:
@@ -57,6 +64,7 @@ class Argument:
         self.avrdude_override: bool = arguments.avrdude_override
         self.avrdude_quite: bool = arguments.avrdude_quite
         self.skip_cargo: bool = arguments.skip_cargo
+        self.elf_path: str = arguments.elf_path
 
 
 class ArgumentError(Exception):
