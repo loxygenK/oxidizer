@@ -73,9 +73,9 @@ def main(argument: Argument):
         print("[!] Writing failed!")
 
     print("[✓] All works done!")
-    
 
-if __name__ == "__main__":
+
+def entry():
     try:
         argument = Argument()
     except ArgumentError as e:
@@ -83,4 +83,8 @@ if __name__ == "__main__":
         print(f"[!] {message}")
     else:
         main(argument)
+
+
+if __name__ == "__main__":
+    entry()
 
