@@ -39,9 +39,11 @@ def run_command(args: List[str]):
     return sp.call(args)
 
 
-def run_cargo(package_name: str, cargo_option: List[str]):
-    print(f"[i] Building '{package_name}'...")
-    return run_command(["cargo", "build", *cargo_option])
+def run_cargo(package_name: str, cargo_option: List[str], release: bool):
+    release_text = "in release mode" if release else ""
+    argument = ["cargo", "build"] + (["--release"] if release else []) + cargo_option
+    print(f"[i] Building '{package_name}' {release_text}...")
+    return run_command(argument)
 
 
 def run_avrdude(
@@ -71,13 +73,19 @@ def main(argument: Argument):
     elf_path = argument.elf_path
     if not argument.skip_cargo:
         package_name = fetch_package_name()
-        cargo_result = run_cargo(package_name, argument.cargo_option)
+        cargo_result = run_cargo(
+            package_name,
+            argument.cargo_option,
+            argument.release,
+        )
         if cargo_result != 0:
             print("[!] Building failed! Exiting.")
             return
         
         if elf_path is None:
-            elf_path = f"target/avr-atmega328p/debug/{package_name}.elf"
+            target_directory = "release" if argument.release else "debug"
+            elf_path = "target/avr-atmega328p/" + \
+                      f"{target_directory}/{package_name}.elf"
 
     print("[i] Building succeeded! Writing to Arduino...")
     avrdude_result = run_avrdude(
