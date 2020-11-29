@@ -96,6 +96,7 @@ def main(argument: Argument):
     )
     if avrdude_result != 0:
         print("[!] Writing failed!")
+        return
 
     print("[✓] All works done!")
 
