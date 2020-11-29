@@ -66,7 +66,7 @@ def main(argument: Argument):
         f"-P{argument.target}",
         f"-Uflash:w:target/avr-atmega328p/debug/{package_name}.elf:e",
         *argument.avrdude_option
-    ] if not argument.avrdude_override else argument.avrdude_option
+    ] if not argument.avrdude_override else ["avrdude", *argument.avrdude_option]
     return_code = run_command(arguments)
 
     if return_code != 0:
