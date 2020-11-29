@@ -21,11 +21,6 @@ class Argument:
             dest="cargo_option"
         )
         self.parser.add_argument(
-            '--cargo-override', '-C',
-            help="override avrdude's option. Use with '-a'", action="store_true",
-            dest="cargo_override"
-        )
-        self.parser.add_argument(
             '--avrdude-option', '-a', metavar="Option",
             help="Pass options to avrdude. Type without '-'!", nargs="*",
             dest="avrdude_option"
@@ -47,16 +42,10 @@ class Argument:
                 "--avrdude-override",
                 "--avrdude-override is selected, but no options were given!"
             )
-        if arguments.cargo_override and arguments.cargo_option is None:
-            raise ArgumentError(
-                "--cargo-override",
-                "--cargo-override is selected, but no options were given!"
-            )
         self.target: str = arguments.target
         self.cargo_option: List[str] = list(
             map(lambda x: (("-" if len(x) == 1 else "--") + x), arguments.cargo_option)
         ) if arguments.cargo_option is not None else []
-        self.cargo_override: bool = arguments.cargo_override
         self.avrdude_option: List[str] = list(
             map(lambda x: (("-" if len(x) == 1 else "--") + x), arguments.avrdude_option)
         ) if arguments.avrdude_option is not None else []
