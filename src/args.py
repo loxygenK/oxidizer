@@ -43,7 +43,7 @@ class Argument:
         self.parser.add_argument(
             '--elf-path', '-e',
             help="Specify ELF file's path. Use "
-                 "target/avr-atmega328p/{debug,release}/{package_name}.elf"
+                 "target/avr-atmega328p/{debug,release}/{package_name}.elf "
                  "as default.",
             dest="elf_path"
         )
