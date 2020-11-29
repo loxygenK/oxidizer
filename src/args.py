@@ -53,9 +53,13 @@ class Argument:
                 "--cargo-override is selected, but no options were given!"
             )
         self.target: str = arguments.target
-        self.cargo_option: List[str] = arguments.cargo_option
+        self.cargo_option: List[str] = list(
+            map(lambda x: (("-" if len(x) == 1 else "--") + x), arguments.cargo_option)
+        ) if arguments.cargo_option is not None else []
         self.cargo_override: bool = arguments.cargo_override
-        self.avrdude_option: List[str] = arguments.avrdude_option
+        self.avrdude_option: List[str] = list(
+            map(lambda x: (("-" if len(x) == 1 else "--") + x), arguments.avrdude_option)
+        ) if arguments.avrdude_option is not None else []
         self.avrdude_override: bool = arguments.avrdude_override
         self.avrdude_quite: bool = arguments.avrdude_quite
 
