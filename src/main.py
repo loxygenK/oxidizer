@@ -57,7 +57,6 @@ def run_avrdude(
     avrdude_option: List[str],
     avrdude_override: bool
     ):
-    # TODO: Does this work in Windows? (Test required)
     if target not in list([x.device for x in list_ports.comports()]):
         Logger.error(f"{target} doesn't exist, or is not a valid path! \n"
                       "Make sure you specified the correct device path.")
