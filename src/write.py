@@ -2,6 +2,7 @@
 import toml
 import os
 import subprocess as sp
+from args import Argument, ArgumentError
 
 from typing import Optional, List
 
@@ -38,13 +39,19 @@ def run_command(args: List[str]):
     return sp.call(args)
 
 
-def main():
+def main(argument: Argument):
+    # TODO: Does this work in Windows? (Test required)
+    if not os.path.exists(argument.target):
+        print(f"[!] {argument.target} does not exist!")
+        print("    Make sure you specified the correct device path.")
+        return
+
     package_name = fetch_package_name()
     if package_name is None:
         return
 
     print(f"[i] Building '{package_name}'...")
-    return_code = run_command(["cargo", "build"])
+    return_code = run_command(["cargo", "build", *argument.cargo_option])
 
     if return_code != 0:
         print("[!] Building failed! Exiting.")
@@ -56,9 +63,10 @@ def main():
         "-C/etc/avrdude.conf",
         "-patmega328p",
         "-carduino",
-        "-P/dev/ttyUSB0",
-        f"-Uflash:w:target/avr-atmega328p/debug/{package_name}.elf:e"
-    ]
+        f"-P{argument.target}",
+        f"-Uflash:w:target/avr-atmega328p/debug/{package_name}.elf:e",
+        *argument.avrdude_option
+    ] if not argument.avrdude_override else ["avrdude", *argument.avrdude_option]
     return_code = run_command(arguments)
 
     if return_code != 0:
@@ -68,5 +76,11 @@ def main():
     
 
 if __name__ == "__main__":
-    main()
+    try:
+        argument = Argument()
+    except ArgumentError as e:
+        message = e.reason
+        print(f"[!] {message}")
+    else:
+        main(argument)
 
