@@ -2,10 +2,13 @@
 import toml
 import os
 import subprocess as sp
+from serial.tools import list_ports
+
+from typing import Optional, List
+
 from src.args import Argument, ArgumentError
 from src.log import Logger
 
-from typing import Optional, List
 
 
 def fetch_package_name() -> Optional[str]:
@@ -55,8 +58,8 @@ def run_avrdude(
     avrdude_override: bool
     ):
     # TODO: Does this work in Windows? (Test required)
-    if not os.path.exists(target):
-        Logger.error(f"{target} does not exist!"
+    if target not in list([x.device for x in list_ports.comports()]):
+        Logger.error(f"{target} doesn't exist, or is not a valid path! \n"
                       "Make sure you specified the correct device path.")
         return
     arguments = [
