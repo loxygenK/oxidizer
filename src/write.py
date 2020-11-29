@@ -51,7 +51,7 @@ def main(argument: Argument):
         return
 
     print(f"[i] Building '{package_name}'...")
-    return_code = run_command(["cargo", "build"])
+    return_code = run_command(["cargo", "build", *argument.cargo_option])
 
     if return_code != 0:
         print("[!] Building failed! Exiting.")
