@@ -35,6 +35,11 @@ class Argument:
             help="Use -q option when avrdude.", action="store_true",
             dest="avrdude_quite"
         )
+        self.parser.add_argument(
+            '--skip-cargo', '-s',
+            help="Skip building using cargo.",
+            dest="skip_cargo"
+        )
 
     def __setup_fields(self, arguments):
         if arguments.avrdude_override and arguments.avrdude_option is None:
@@ -51,6 +56,7 @@ class Argument:
         ) if arguments.avrdude_option is not None else []
         self.avrdude_override: bool = arguments.avrdude_override
         self.avrdude_quite: bool = arguments.avrdude_quite
+        self.skip_cargo: bool = arguments.skip_cargo
 
 
 class ArgumentError(Exception):
