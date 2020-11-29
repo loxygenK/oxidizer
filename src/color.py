@@ -17,8 +17,6 @@ class ConsoleBaseColor(IntEnum):
         return f"\033[48;5;{int(self)}m"
 
     def paint(self, text: str):
-        if not __color_enable:
-            return text
         return self.fore() + text + "\033[m"
 
 def bold(text: str):
