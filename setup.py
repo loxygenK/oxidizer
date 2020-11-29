@@ -10,7 +10,7 @@ def load_readme():
     with open("README.md") as f:
         return f.read()
 
-version = "0.1.1"
+version = "0.1.2"
 
 setup(
     name="arduino-oxidizer",
