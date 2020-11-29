@@ -39,6 +39,29 @@ def run_command(args: List[str]):
     return sp.call(args)
 
 
+def run_cargo(package_name: str, cargo_option: List[str]):
+    print(f"[i] Building '{package_name}'...")
+    return run_command(["cargo", "build", *cargo_option])
+
+
+def run_avrdude(
+    target: str,
+    elf_path: str,
+    avrdude_option: List[str],
+    avrdude_override: bool
+    ):
+    arguments = [
+        "avrdude",
+        "-C/etc/avrdude.conf",
+        "-patmega328p",
+        "-carduino",
+        f"-P{target}",
+        f"-Uflash:w:{elf_path}:e",
+        *avrdude_option
+    ] if not avrdude_override else ["avrdude", *avrdude_option]
+    return run_command(arguments)
+
+
 def main(argument: Argument):
     # TODO: Does this work in Windows? (Test required)
     if not os.path.exists(argument.target):
@@ -47,29 +70,20 @@ def main(argument: Argument):
         return
 
     package_name = fetch_package_name()
-    if package_name is None:
-        return
-
-    print(f"[i] Building '{package_name}'...")
-    return_code = run_command(["cargo", "build", *argument.cargo_option])
-
-    if return_code != 0:
+    cargo_result = run_cargo(package_name, argument.cargo_option)
+    if cargo_result != 0:
         print("[!] Building failed! Exiting.")
         return
 
     print("[i] Building succeeded! Writing to Arduino...")
-    arguments = [
-        "avrdude",
-        "-C/etc/avrdude.conf",
-        "-patmega328p",
-        "-carduino",
-        f"-P{argument.target}",
-        f"-Uflash:w:target/avr-atmega328p/debug/{package_name}.elf:e",
-        *argument.avrdude_option
-    ] if not argument.avrdude_override else ["avrdude", *argument.avrdude_option]
-    return_code = run_command(arguments)
-
-    if return_code != 0:
+    elf_path = f"target/avr-atmega328p/debug/{package_name}.elf"
+    avrdude_result = run_avrdude(
+        argument.target,
+        elf_path,
+        argument.avrdude_option,
+        argument.avrdude_override
+    )
+    if avrdude_result != 0:
         print("[!] Writing failed!")
 
     print("[✓] All works done!")
