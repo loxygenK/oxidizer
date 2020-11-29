@@ -1,7 +1,5 @@
 from enum import IntEnum
 
-__color_enable = True
-
 class ConsoleBaseColor(IntEnum):
     BLACK = 0
     RED = 1
@@ -24,12 +22,5 @@ class ConsoleBaseColor(IntEnum):
         return self.fore() + text + "\033[m"
 
 def bold(text: str):
-    if not __color_enable:
-        return text
-
     return f"\033[1m{text}\033[m"
-
-def disable_color():
-    global __color_enable
-    __color_enable = False
 
