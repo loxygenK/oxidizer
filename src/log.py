@@ -1,23 +1,29 @@
-from color import bold, ConsoleBaseColor
+from src.color import bold, ConsoleBaseColor
 
 class Logger:
+    __USE_COLOR = True
 
-    def __init__(self, use_color: bool):
-        self.use_color = use_color
-
-    def print_with_tag(tag_char: str, color: ConsoleBaseColor, text: str):
+    @classmethod
+    def print_with_tag(cls, tag_char: str, color: ConsoleBaseColor, text: str):
         tag = (bold(color.paint(f"[{tag_char}]"))) \
-              if self.use_color else "[{tag_char}]"
+              if cls.__USE_COLOR else "[{tag_char}]"
         indented = "    ".join(text.split())
-        main_text = color.paint(indented) if self.use_color else indented
-        print(tag + indented)
+        main_text = color.paint(indented) if cls.__USE_COLOR else indented
+        print(tag + main_text)
     
-    def info(text: str):
-        print_with_tag("i", ConsoleBaseColor.CYAN, text)
+    @classmethod
+    def info(cls, text: str):
+        cls.print_with_tag("i", ConsoleBaseColor.CYAN, text)
 
-    def error(text: str):
-        print_with_tag("!", ConsoleBaseColor.RED, text)
+    @classmethod
+    def error(cls, text: str):
+        cls.print_with_tag("!", ConsoleBaseColor.RED, text)
 
-    def success(text: str):
-        print_with_tag("✓", ConsoleBaseColor.GREEN, text)
+    @classmethod
+    def success(cls, text: str):
+        cls.print_with_tag("✓", ConsoleBaseColor.GREEN, text)
+
+    @classmethod
+    def disable_color(cls):
+        cls.__USE_COLOR = False
 
