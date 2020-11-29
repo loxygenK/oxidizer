@@ -6,7 +6,7 @@ class Logger:
     @classmethod
     def print_with_tag(cls, tag_char: str, color: ConsoleBaseColor, text: str):
         tag = (bold(color.paint(f"[{tag_char}] "))) \
-              if cls.__USE_COLOR else "[{tag_char}] "
+              if cls.__USE_COLOR else f"[{tag_char}] "
         indented = "\n    ".join(text.split("\n"))
         main_text = color.paint(indented) if cls.__USE_COLOR else indented
         print(tag + main_text)
