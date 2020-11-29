@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from typing import List
 
 class Argument:
 
@@ -40,4 +41,30 @@ class Argument:
             help="Use -q option when avrdude.", action="store_true",
             dest="avrdude_quite"
         )
+
+    def __setup_fields(self, arguments):
+        if arguments.avrdude_override and arguments.avrdude_option is None:
+            raise ArgumentError(
+                "--avrdude-override",
+                "--avrdude-override is selected, but no options were given!"
+            )
+        if arguments.cargo_override and arguments.cargo_option is None:
+            raise ArgumentError(
+                "--cargo-override",
+                "--cargo-override is selected, but no options were given!"
+            )
+        self.subcommand: str = arguments.subcommand
+        self.cargo_option: List[str] = arguments.cargo_option
+        self.cargo_override: bool = arguments.cargo_override
+        self.avrdude_option: List[str] = arguments.avrdude_option
+        self.avrdude_override: bool = arguments.avrdude_override
+        self.avrdude_quite: bool = arguments.avrdude_quite
+
+
+class ArgumentError(Exception):
+    def __init__(self,
+            argname: str, reason: str):
+        super().__init__(f"'{argname}' is invalid: {reason}")
+        self.argname = argname
+        self.reason = reason
 
