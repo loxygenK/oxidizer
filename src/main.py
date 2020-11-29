@@ -107,6 +107,7 @@ def entry():
     try:
         argument = Argument()
     except ArgumentError as e:
+        Logger.disable_color()
         Logger.error(e.reason)
         return
 
