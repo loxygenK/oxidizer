@@ -54,6 +54,12 @@ class Argument:
                 "--avrdude-override",
                 "--avrdude-override is selected, but no options were given!"
             )
+        if arguments.elf_path is None and arguments.skip_cargo:
+            raise ArgumentError(
+                "--skip_cargo",
+                "You should specify elf_path using '--elf_path' when "
+                "skipping cargo."
+            )
         self.target: str = arguments.target
         self.cargo_option: List[str] = list(
             map(lambda x: (("-" if len(x) == 1 else "--") + x), arguments.cargo_option)
