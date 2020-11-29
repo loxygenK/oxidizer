@@ -16,6 +16,11 @@ class Argument:
             'target', help='Specify the serial port to write.'
         )
         self.parser.add_argument(
+            '--release', '-r',
+            help="Let cargo build in release mode", action="store_true",
+            dest="release"
+        )
+        self.parser.add_argument(
             '--cargo-option', '-c', metavar="Option",
             help="Pass options to cargo. Type without '-'!", nargs="*",
             dest="cargo_option"
@@ -54,13 +59,21 @@ class Argument:
                 "--avrdude-override",
                 "--avrdude-override is selected, but no options were given!"
             )
-        if arguments.elf_path is None and arguments.skip_cargo:
-            raise ArgumentError(
-                "--skip_cargo",
-                "You should specify elf_path using '--elf_path' when "
-                "skipping cargo."
-            )
+        if arguments.skip_cargo:
+            if arguments.release:
+                raise ArgumentError(
+                    "--release",
+                    "You cannot select '--release' when you are going to "
+                    "skip building with cargo."
+                )
+            if arguments.elf_path is None:
+                raise ArgumentError(
+                    "--skip_cargo",
+                    "You should specify elf_path using '--elf_path' when "
+                    "skipping cargo."
+                )
         self.target: str = arguments.target
+        self.release: bool = arguments.release
         self.cargo_option: List[str] = list(
             map(lambda x: (("-" if len(x) == 1 else "--") + x), arguments.cargo_option)
         ) if arguments.cargo_option is not None else []
