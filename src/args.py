@@ -37,7 +37,7 @@ class Argument:
         )
         self.parser.add_argument(
             '--skip-cargo', '-s',
-            help="Skip building using cargo.",
+            help="Skip building using cargo.", action="store_true",
             dest="skip_cargo"
         )
         self.parser.add_argument(
