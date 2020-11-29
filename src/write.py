@@ -63,9 +63,10 @@ def main(argument: Argument):
         "-C/etc/avrdude.conf",
         "-patmega328p",
         "-carduino",
-        "-P/dev/ttyUSB0",
-        f"-Uflash:w:target/avr-atmega328p/debug/{package_name}.elf:e"
-    ]
+        f"-P{argument.target}",
+        f"-Uflash:w:target/avr-atmega328p/debug/{package_name}.elf:e",
+        *argument.avrdude_option
+    ] if not argument.avrdude_override else argument.avrdude_option
     return_code = run_command(arguments)
 
     if return_code != 0:
