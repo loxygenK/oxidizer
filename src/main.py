@@ -83,7 +83,9 @@ def main(argument: Argument):
             return
         
         if elf_path is None:
-            elf_path = f"target/avr-atmega328p/debug/{package_name}.elf"
+            target_directory = "release" if argument.release else "debug"
+            elf_path = "target/avr-atmega328p/" + \
+                      f"{target_directory}/{package_name}.elf"
 
     print("[i] Building succeeded! Writing to Arduino...")
     avrdude_result = run_avrdude(
