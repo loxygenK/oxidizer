@@ -7,7 +7,7 @@ def load_requirements():
 
 
 def load_readme():
-    with open("README.rst") as f:
+    with open("README.md") as f:
         return f.read()
 
 version = "0.1.0"
@@ -21,6 +21,7 @@ setup(
     maintainer_email="me@loxygen.dev",
     description="A python tool to build Rust project for Arduino and write it.",
     long_description=load_readme(),
+    long_description_content_type="text/markdown",
     packages=["src"],
     install_requires=load_requirements(),
     license="MIT",
