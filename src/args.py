@@ -7,7 +7,7 @@ class Argument:
             description="A building helper for the Rust project for Arduino.",
         )
         self.__setup_parser()
-        self.args = self.parser.parse_args()
+        self.__setup_fields(self.parser.parse_args())
 
 
     def __setup_parser(self):
@@ -17,22 +17,27 @@ class Argument:
         )
         self.parser.add_argument(
             '--cargo-option', '-c', metavar="Option",
-            help="Pass options to cargo.", nargs="*"
+            help="Pass options to cargo. Type without '-'!", nargs="*",
+            dest="cargo_option"
         )
         self.parser.add_argument(
             '--cargo-override', '-C',
-            help="override avrdude's option. Use with '-a'", action="store_true"
+            help="override avrdude's option. Use with '-a'", action="store_true",
+            dest="cargo_override"
         )
         self.parser.add_argument(
             '--avrdude-option', '-a', metavar="Option",
-            help="Pass options to avrdude.", nargs="*"
-        )
-        self.parser.add_argument(
-            '--avrdude-quite', '-q',
-            help="Use -q option when avrdude.", action="store_true"
+            help="Pass options to avrdude. Type without '-'!", nargs="*",
+            dest="avrdude_option"
         )
         self.parser.add_argument(
             '--avrdude-override', '-A',
-            help="override avrdude's option. Use with '-a'", action="store_true"
+            help="override avrdude's option. Use with '-a'", action="store_true",
+            dest="avrdude_override"
+        )
+        self.parser.add_argument(
+            '--avrdude-quite', '-q',
+            help="Use -q option when avrdude.", action="store_true",
+            dest="avrdude_quite"
         )
 
