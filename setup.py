@@ -10,7 +10,7 @@ def load_readme():
     with open("README.md") as f:
         return f.read()
 
-version = "0.1.2"
+version = "1.0.0"
 
 setup(
     name="arduino-oxidizer",
@@ -21,7 +21,7 @@ setup(
     maintainer="loxygen",
     maintainer_email="me@loxygen.dev",
     description="A python tool to build Rust project for Arduino and write it.",
-    long_descripton=load_readme(),
+    long_description=load_readme(),
     long_description_content_type="text/markdown",
     packages=["src"],
     install_requires=load_requirements(),
