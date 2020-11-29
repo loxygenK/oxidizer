@@ -52,6 +52,11 @@ class Argument:
                  "as default.",
             dest="elf_path"
         )
+        self.parser.add_argument(
+            '--no-color',
+            help="Disable color output.", action="store_true",
+            dest="no_color"
+        )
 
     def __setup_fields(self, arguments):
         if arguments.avrdude_override and arguments.avrdude_option is None:
@@ -84,6 +89,7 @@ class Argument:
         self.avrdude_quite: bool = arguments.avrdude_quite
         self.skip_cargo: bool = arguments.skip_cargo
         self.elf_path: str = arguments.elf_path
+        self.no_color: bool = arguments.no_color
 
 
 class ArgumentError(Exception):
