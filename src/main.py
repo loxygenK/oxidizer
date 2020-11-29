@@ -3,31 +3,33 @@ import toml
 import os
 import subprocess as sp
 from src.args import Argument, ArgumentError
+from src.log import Logger
 
 from typing import Optional, List
 
+
 def fetch_package_name() -> Optional[str]:
     if not os.path.isfile("Cargo.toml"):
-        print("[!] Cargo.toml not found!")
-        print("    Please run this script at the root of the project.")
+        Logger.error("Cargo.toml not found!\n"
+                     "Please run this script at the root of the project.")
         return None
 
     with open("Cargo.toml") as f:
         cargo_setting = toml.load(f)
 
     if "package" not in cargo_setting:
-        print("[!] '[Package]' not found in 'Cargo.toml'!")
-        print("    Is your Cargo.toml valid?")
+        Logger.error("'[Package]' not found in 'Cargo.toml'!\n"
+                     "Is your Cargo.toml valid?")
         return None
 
     if "name" not in cargo_setting["package"]:
-        print("[!] 'name' not found in 'Cargo.toml'->[package]!")
-        print("    Is your Cargo.toml valid?")
+        Logger.error("'name' not found in 'Cargo.toml'->[package]!\n"
+                     "Is your Cargo.toml valid?")
         return None
 
     if type(cargo_setting["package"]["name"]) is not str:
-        print("[!] The package's name is not str!")
-        print("    Is your Cargo.toml valid?")
+        Logger.error("The package's name is not str!\n"
+                     "Is your Cargo.toml valid?")
         return None
 
     return cargo_setting["package"]["name"]
@@ -35,14 +37,14 @@ def fetch_package_name() -> Optional[str]:
 
 def run_command(args: List[str]):
     command_string = " ".join(args)
-    print(f">> {command_string}")
+    Logger.info(f">> {command_string}")
     return sp.call(args)
 
 
 def run_cargo(package_name: str, cargo_option: List[str], release: bool):
     release_text = "in release mode" if release else ""
     argument = ["cargo", "build"] + (["--release"] if release else []) + cargo_option
-    print(f"[i] Building '{package_name}' {release_text}...")
+    Logger.info(f"Building '{package_name}' {release_text}...")
     return run_command(argument)
 
 
@@ -54,8 +56,8 @@ def run_avrdude(
     ):
     # TODO: Does this work in Windows? (Test required)
     if not os.path.exists(target):
-        print(f"[!] {target} does not exist!")
-        print("    Make sure you specified the correct device path.")
+        Logger.error(f"{target} does not exist!"
+                      "Make sure you specified the correct device path.")
         return
     arguments = [
         "avrdude",
@@ -79,14 +81,14 @@ def main(argument: Argument):
             argument.release,
         )
         if cargo_result != 0:
-            print("[!] Building failed! Exiting.")
+            Logger.error("Building failed! Exiting.")
             return
         
         if elf_path is None:
             target_directory = "release" if argument.release else "debug"
             elf_path = "target/avr-atmega328p/" + \
                       f"{target_directory}/{package_name}.elf"
-        print("[i] Building succeeded! Writing to Arduino...")
+        Logger.error("Building succeeded! Writing to Arduino...")
 
     avrdude_result = run_avrdude(
         argument.target,
@@ -95,10 +97,10 @@ def main(argument: Argument):
         argument.avrdude_override
     )
     if avrdude_result != 0:
-        print("[!] Writing failed!")
+        Logger.error("Writing failed!")
         return
 
-    print("[✓] All works done!")
+    Logger.error("All works done!")
 
 
 def entry():
